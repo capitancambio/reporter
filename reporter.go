@@ -19,7 +19,11 @@ func NewGoTestCompatibleReporter() *GoTestCompatibleReporter {
 }
 
 func createTestName(texts []string) string {
-	return strings.Replace(texts[len(texts)-2], " ", "_", -1)
+	name := ""
+	for _, text := range texts[1:] {
+		name += strings.Replace(text, " ", "_", -1) + "_"
+	}
+	return name
 }
 
 func (reporter *GoTestCompatibleReporter) SpecSuiteWillBegin(config config.GinkgoConfigType, summary *types.SuiteSummary) {
@@ -40,6 +44,7 @@ func (reporter *GoTestCompatibleReporter) SpecDidComplete(specSummary *types.Spe
 		header += "PASS"
 	} else if specSummary.Failed() {
 		header += "FAIL"
+		postfix += specSummary.Failure.Message + "\n"
 	} else if specSummary.Panicked() {
 		header = "panic: " + specSummary.Failure.ForwardedPanic + " [recovered]    "
 		postfix += fmt.Sprintf("Location: %v \nMessage: %v\n", specSummary.Failure.ComponentCodeLocation.String(), specSummary.Failure.Message)
