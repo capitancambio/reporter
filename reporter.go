@@ -18,7 +18,7 @@ func NewGoTestCompatibleReporter() *GoTestCompatibleReporter {
 }
 
 func createTestName(texts []string) string {
-	return texts[len(texts)-2]
+	return strings.Replace(texts[len(texts)-2], " ", "_", -1)
 }
 
 func (reporter *GoTestCompatibleReporter) SpecSuiteWillBegin(config config.GinkgoConfigType, summary *types.SuiteSummary) {
@@ -30,7 +30,7 @@ func (reporter *GoTestCompatibleReporter) BeforeSuiteDidRun(setupSummary *types.
 
 func (reporter *GoTestCompatibleReporter) SpecWillRun(specSummary *types.SpecSummary) {
 	fmt.Println("=== RUN  ", createTestName(specSummary.ComponentTexts))
-}
+
 
 func (reporter *GoTestCompatibleReporter) SpecDidComplete(specSummary *types.SpecSummary) {
 	var header string = "--- "
